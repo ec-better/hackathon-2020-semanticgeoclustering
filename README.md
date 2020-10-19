@@ -40,18 +40,28 @@ make up
 ```
 Start the cluster (this will lead to downloading BDE docker images, which will take a while)
 
-
-# Getting started on the day of hackathon
-When start-up is done you will be able to access the following interfaces:
-* http://localhost:8080/ (Spark Master)
-* http://localhost:8088/home (Hue HDFS Filebrowser)
-* http://localhost/ (Zeppelin)
 To load the data to your cluster simply do:
 ```
 make load-data
 ```
-Go on and open [Zeppelin](http://localhost), choose any available notebook and try to execute it.
+
+# Starting page on the day of hackathon
+When start-up is done you will be able to access the following interfaces:
+* http://localhost:8080/ (Spark Master)
+* http://localhost:8088/home (Hue HDFS Filebrowser)
+* http://localhost/ (Zeppelin)
+
+Go on and open [Zeppelin](http://localhost), make a new notebook and wait for the moderator to start the session.
 ![Apache Zeppelin RDF POI](./docs/images/POI.png "Apache Zeppelin Running POI Example")
+
+
+
+# Notes
+* The instructions from this repo were tested on Ubuntu 18.04 and Macos 10.15.5 with Docker engine 17.03. and Docker engine 19.03.13
+
+* This repository you hold a [docker-compose.yml](./docker-compose.yml) for running Hadoop/Spark cluster locally.
+* The cluster also includes [Hue](http://gethue.com/) for navigation and copying file to HDFS.
+* The notebooks are created and run using [Apache Zeppelin](https://zeppelin.apache.org/).
 
 To restart Zeppelin without restarting the whole stack:
 ```
@@ -61,18 +71,10 @@ Stop the whole stack:
 ```
 make down
 ```
-# Executing hackathon From Command Line
+### Executing hackathon From Command Line
 It is also possible to execute the applications from the command line. Get SANSA-Examples jar and start the cluster if you already have not done it:
 ```
 make
 make up
 make load-data
 ```
-
-# Notes
-* The instructions from this repo were tested on Ubuntu 18.04 and Macos 10.15.5 with Docker engine 17.03. and Docker engine 19.03.13
-
-* This repository you hold a [docker-compose.yml](./docker-compose.yml) for running Hadoop/Spark cluster locally.
-* The cluster also includes [Hue](http://gethue.com/) for navigation and copying file to HDFS.
-* The notebooks are created and run using [Apache Zeppelin](https://zeppelin.apache.org/).
-
