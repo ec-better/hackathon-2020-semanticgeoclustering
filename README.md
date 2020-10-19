@@ -25,24 +25,27 @@ The exercise will feature the deployment of <ins>a pre-setup Docker image on Lin
 
 4. After Installation, configure Docker:
   ```
-sudo usermod -aG docker %username%
-```
+  sudo usermod -aG docker %username%
+  ```
   This allows to run docker commands without sudo prefix (necessary for running make targets).
 
-Get the hackathon jar file (requires ```wget```):
-```
-make
-```
-Start the cluster (this will lead to downloading BDE docker images, will take a while):
-```
-make up
-```
-Start the cluster (this will lead to downloading BDE docker images, which will take a while)
+  Get the hackathon jar file (requires ```wget```):
+  ```
+  make
+  ```
+  Start the cluster (this will lead to downloading BDE docker images, will take a while):
+  ```
+  make up
+  ```
+  Start the cluster (this will lead to downloading BDE docker images, which will take a while)
 
-To load the data to your cluster simply do:
-```
-make load-data
-```
+  To load the data to your cluster simply do:
+  ```
+  make load-data
+  ```
+  #### You are now ready for the hackathon! 
+
+
 
 ## Starting page on the day of hackathon
 When start-up is done you will be able to access the following interfaces:
