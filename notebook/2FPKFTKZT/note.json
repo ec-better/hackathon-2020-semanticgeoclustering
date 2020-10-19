@@ -1,0 +1,525 @@
+{
+  "paragraphs": [
+    {
+      "text": "%python\nimport json\nimport os\n#import pydoop.hdfs as hdfs\n\nprefix \u003d \"http://slipo.eu/id/poi\"\nrdftype \u003d \"\u003chttp://www.w3.org/1999/02/22-rdf-syntax-ns#type\u003e\"\npoi \u003d \"\u003chttp://slipo.eu/def#POI\u003e\"\ncategory \u003d \"\u003chttp://slipo.eu/def#category\u003e\"\ntermPrefix \u003d \"http://slipo.eu/id/term\"\ntermValue \u003d \"\u003chttp://slipo.eu/def#termValue\u003e\"\nrdf \u003d \"\"\ni \u003d 0\nhasGeometry \u003d \"\u003chttp://www.opengis.net/ont/geosparql#hasGeometry\u003e\"\ngeometryID \u003d \"\u003chttp://slipo.eu/id/poi/__id__/geometry\u003e\"\nwkt \u003d \"\u003chttp://www.opengis.net/ont/geosparql#asWKT\u003e\"\nepsg \u003d \"\u003chttp://www.opengis.net/def/crs/EPSG/0/4326\u003e\"\nwktLiteral \u003d \"\u003chttp://www.opengis.net/ont/geosparql#wktLiteral\u003e\"\n#input \u003d \"https://raw.githubusercontent.com/afshinsadeghi/ecbetter/master/EnglishFloodTweets__.json\"\n#input  \u003d \u0027hdfs://namenode:8020/data/EnglishFloodTweets__.txt\u0027\n#input \u003d \u0027file:///Users/asadeghi/Projects/fraunhofer/SANSA-Notebooks-master/examples/data/EnglishFloodTweets__.txt\u0027\ninput \u003d \u0027../sansa-examples/data//EnglishFloodTweets__.txt\u0027\n#with hdfs.open(\u0027/user/myuser/filename\u0027) as json_file:\n    #for line in f:\n    #    do_something(line)\n\nwith open(input) as json_file:# dummy_tweet.json\n    data \u003d json.load(json_file)\n    temp \u003d 0\n    for p in data[\u0027tweets\u0027]:\n        print(p[\u0027id\u0027])\n        \n        temp \u003d temp+1\n        point_id \u003d p[\u0027id\u0027]\n        concepts \u003d p[\u0027image_concepts\u0027]\n\n        if concepts !\u003d \"n/a\":\n            subject \u003d \"\u003c\" + prefix + \"/\" + point_id + \"\u003e\"            \n            triple \u003d subject + \" \" + rdftype + \" \" + poi + \" . \"\n            rdf +\u003d triple + \"\\n\"\n\n            conceptsArray \u003d concepts.split()\n            for cat in conceptsArray:   \n                term \u003d (\"\u003c\" + termPrefix + \"/%s\u003e\" % i)             \n                triple2category \u003d subject + \" \" + category + \" \" + term + \" .\\n\"                \n                categoryTerm \u003d subject + \" \" + termValue + \" \\\"\" + cat + \"\\\" .\\n\"\n                rdf +\u003d triple2category + categoryTerm\n                i \u003d i+1\n            \n            locations \u003d p[\u0027estimated_locations\u0027]\n            geometry \u003d locations[0][\u0027geometry\u0027]\n            coordinates \u003d geometry[\u0027coordinates\u0027]\n            lat \u003d coordinates[0]\n            long \u003d coordinates[1]\n\n            geometryObject \u003d geometryID.replace(\"__id__\", point_id)\n\n            geo \u003d subject + \" \" + hasGeometry + \" \" + geometryObject + \" .\"\n            geoPoint \u003d ((geometryObject + \" \" + wkt + \" \\\"\" + epsg + \" POINT(%f %f)\\\"^^\" + wktLiteral + \" .\") % (lat, long))\n\n\n            rdf +\u003d geo + \"\\n\" + geoPoint + \"\\n\"\n\n            # print(rdf)\n\n                \n\n    # print(rdf)\n\n    output_file \u003d open(\u0027../sansa-examples/data/EOPEN_POIs_100.nt\u0027, \u0027w+\u0027) # append mode\n    output_file.write(rdf)\n    output_file.close()\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:21.844",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925636_623988445",
+      "id": "20201002-093213_1749750785",
+      "dateCreated": "2020-10-15 14:42:05.636",
+      "dateStarted": "2020-10-15 14:42:21.912",
+      "dateFinished": "2020-10-15 14:42:22.141",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n%sh\nhead ../sansa-examples/data/EOPEN_POIs_100.nt",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:22.215",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925637_1697565508",
+      "id": "20201002-093645_366596198",
+      "dateCreated": "2020-10-15 14:42:05.637",
+      "dateStarted": "2020-10-15 14:42:22.278",
+      "dateFinished": "2020-10-15 14:42:22.325",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nhadoop fs -rm  /data/EOPEN_POIs_100.nt\nhadoop fs -put ../sansa-examples/data/EOPEN_POIs_100.nt  /data/",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:22.377",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925638_-1415856388",
+      "id": "20201002-124735_935381712",
+      "dateCreated": "2020-10-15 14:42:05.638",
+      "dateStarted": "2020-10-15 14:42:22.443",
+      "dateFinished": "2020-10-15 14:42:26.785",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nhdfs dfs -ls /data",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:26.865",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925638_1845963654",
+      "id": "20201002-124836_1379100346",
+      "dateCreated": "2020-10-15 14:42:05.638",
+      "dateStarted": "2020-10-15 14:42:26.919",
+      "dateFinished": "2020-10-15 14:42:29.115",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimport org.apache.jena.riot.Lang\nimport com.typesafe.config.ConfigFactory\nimport net.sansa_stack.ml.spark.clustering.utils.DataProcessing\nimport net.sansa_stack.rdf.spark.io._\n\n\nval input \u003d \"/data/EOPEN_POIs_100.nt\"\nval lang \u003d Lang.NTRIPLES\n\nval triples \u003d spark.rdf(lang)(input)\n\ntriples.take(30).foreach(println)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:29.124",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925638_1041601151",
+      "id": "20201002-121011_981424238",
+      "dateCreated": "2020-10-15 14:42:05.639",
+      "dateStarted": "2020-10-15 14:42:29.213",
+      "dateFinished": "2020-10-15 14:42:30.067",
+      "status": "ERROR",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n%spark\nimport org.apache.spark.rdd.RDD\ncase class spatial(longitude: Double, latitude: Double)\n\ndef getPOICoordinates: RDD[(Long, spatial)] \u003d {\n    // get the coordinates of pois\n    val pattern \u003d \"POINT (.+ .+)\".r\n    val poiCoordinatesString \u003d triples.filter(x \u003d\u003e x.getPredicate.toString().equalsIgnoreCase(\"http://www.opengis.net/ont/geosparql#asWKT\"))\n    val removeRelation\u003dpoiCoordinatesString.filter(f \u003d\u003e (!f.getSubject.toString().contains(\"http://slipo.eu/id/x\")))\n      .map(x \u003d\u003e (x.getSubject.toString().replace(\"http://slipo.eu/id/poi/\", \"\").replace(\"\",\"\").replace(\"/geometry\", \"\")\n      .toLong,pattern.findFirstIn(x.getObject.toString()).head.replace(\"POINT \", \"\") \n          .replace(\"^^http://www.opengis.net/ont/geosparql#wktLiteral\", \"\").replaceAll(\"^\\\"|\\\"$\", \"\"))) \n    //println(removeRelation.count)\n          // transform to Coordinate object\n    \n    val m\u003dremoveRelation.mapValues(x \u003d\u003e {\n        val coordinates \u003d x.replace(\"(\", \"\").replace(\")\", \"\").split(\" \")\n        spatial(coordinates(0).toDouble, coordinates(1).toDouble)\n    })\n    m\n }\nvar poiCoordinates: RDD[(Long, spatial)]\u003d getPOICoordinates.persist()\nvar poiCoordinatesfiltered \u003d triples.filter(x \u003d\u003e x.getPredicate.toString().equalsIgnoreCase(\"http://www.opengis.net/ont/geosparql#asWKT\")).map(x \u003d\u003e (x.getSubject.toString().replace(\"http://slipo.eu/id/poi/\", \"\").replace(\"\",\"\").replace(\"/geometry\", \"\")\n    .toLong, x.getObject.toString().replace(\"POINT\", \"\").replace(\"\u003chttp://www.opengis.net/def/crs/EPSG/0/4326\u003e\",\"\").replace(\"(\", \"\").replace(\")\", \"\")\n          .replace(\"^^http://www.opengis.net/ont/geosparql#wktLiteral\", \"\").replaceAll(\"^\\\"|\\\"$\", \"\")  ))\n\n\nprintln(poiCoordinatesfiltered.count)\nprintln(triples.count)\npoiCoordinatesfiltered.take(2).foreach(println)\n\n\nval POIcoordinates\u003dpoiCoordinatesfiltered.mapValues(x \u003d\u003e {\n        val coordinates \u003d x.replace(\"(\", \"\").replace(\")\", \"\").split(\" \")\n        spatial(coordinates(1).toDouble, coordinates(2).toDouble)\n        })\n        \n\nprintln(POIcoordinates.count)        \nPOIcoordinates.take(3).foreach(println)\n\n\n\ndef getCat(): RDD[(Long, String)] \u003d {\n    val keyName\u003dtriples.filter(f\u003d\u003ef.getPredicate.toString().contains(\"http://slipo.eu/def#termValue\"))\n    val filterSub\u003dkeyName.filter(f\u003d\u003ef.getSubject.toString().contains(\"http://slipo.eu/id/poi/\"))\n    val getKV\u003d filterSub.map(x \u003d\u003e ((x.getSubject.toString().replace(\"http://slipo.eu/id/poi/\", \"\").toLong),\n        x.getObject.toString()))\n    getKV.take(2).foreach(println)\n    getKV    \n}\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.639",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925639_2047562953",
+      "id": "20201002-121019_733328916",
+      "dateCreated": "2020-10-15 14:42:05.639",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\ncase class PoiOSM(poi_id: Long, coordinate: spatial, categories: String)\nvar categoriesOSM\u003d getCat\nvar join_e\u003dPOIcoordinates.join(categoriesOSM)\n//join_e.map(f\u003d\u003ef._2._1).take(2).foreach(println)\n\nval pois\u003djoin_e.map(f\u003d\u003ePoiOSM(f._1.toLong,f._2._1,f._2._2.toString))\npois.take(2).foreach(println)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.639",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925639_-1003533173",
+      "id": "20201003-162655_270474105",
+      "dateCreated": "2020-10-15 14:42:05.639",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\n//case class PoiOSM(poi_id: Long, coordinate: spatial, categories: String)\n// var categoriesOSM\u003d getCat.toDF(\"id\", \"cat\")\n// var poiCoordinates_H \u003d POIcoordinates.toDF(\"id\", \"place\")\n //poiCoordinates_H.show()\n\n// println(poiCoordinates_H.count)\n// var join\u003dpoiCoordinates_H.join(categoriesOSM,poiCoordinates_H(\"id\") \u003c\u003d\u003e categoriesOSM(\"id\") )//.join(cuisne)\n// join.show()\n// val pois\u003djoin.map(f\u003d\u003ePoiOSM(join.select(col(\"id\")).,join.select(col(\"place\")), join.select(col(\"cat\")) ))\n// println(pois.count)\n// pois.show()\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.639",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925639_704349203",
+      "id": "20201003-155020_1841445414",
+      "dateCreated": "2020-10-15 14:42:05.639",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\ncase class ClusterOSM(cluster_id: Int, poi_in_cluster: Array[PoiOSM])\ncase class ClsutersOSM(numOfClusters: Int,clusterSizes: Array[Int],clusters:Array[ClusterOSM])\nval poiCategorySetVienna \u003d pois.map(poi \u003d\u003e (poi.categories,(poi.coordinate,poi.poi_id))).persist()\nval a\u003dpoiCategorySetVienna.groupByKey()\nval b\u003da.zipWithIndex()\nval forJSON\u003db.map(f \u003d\u003e (f._2,(f._1._1,f._1._2.toArray)))\nval t\u003dforJSON.map(f \u003d\u003e ClusterOSM(f._1.toInt,f._2._2.map(g \u003d\u003e PoiOSM(g._2,g._1,f._2._1)))).collect()\nval assignments \u003d forJSON.collect().toList.map(f \u003d\u003e f._2._2.length).toArray\nval assm\u003dassignments.toArray\nval lenthCluster\u003dassm.length\nval finaloutputforsaving\u003d ClsutersOSM(lenthCluster,assm,t)\npoiCategorySetVienna.take(10).foreach(println)\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.639",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925639_-981665384",
+      "id": "20201002-125458_1457819758",
+      "dateCreated": "2020-10-15 14:42:05.639",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nz.angularBind(\"clustersPois\", finaloutputforsaving)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.640",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925640_-1735666665",
+      "id": "20201002-125537_1123969626",
+      "dateCreated": "2020-10-15 14:42:05.640",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nval c\u003db.map(f\u003d\u003e((f._2,f._1._1,f._1._2)))\nval d\u003db.map(f\u003d\u003ef._1._2.map(g\u003d\u003e(f._2,f._1._1,g._1,g._2)).toList)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.640",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925640_-1598907181",
+      "id": "20201002-135901_1064225599",
+      "dateCreated": "2020-10-15 14:42:05.640",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimport com.vividsolutions.jts.geom.{ Coordinate, Envelope, GeometryFactory, Point }\n   \nval geometryFactory \u003d new GeometryFactory()\nval dbparam\u003dd.collect.map(f \u003d\u003e f.map{g \u003d\u003e\n    val clsuterid\u003dg._1+\".\"\n    val poid\u003dg._4\n    val combineId\u003dclsuterid+poid\n    val lat\u003dg._3.latitude\n    val long\u003dg._3.longitude\n    val point \u003d geometryFactory.createPoint(new Coordinate(long, lat))\n        point.setUserData(combineId)\n        point\n    })\ndbparam.take(3).foreach(println)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.640",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925640_-401962444",
+      "id": "20201002-141632_572807873",
+      "dateCreated": "2020-10-15 14:42:05.640",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimport net.sansa_stack.ml.spark.clustering.algorithms.DBSCAN\nimport net.sansa_stack.ml.spark.clustering._\nimport scala.util.parsing.json._\nimport org.json4s.jackson.Serialization.write\nimport org.json4s._\nimport org.json4s.jackson.JsonMethods._\nimport com.vividsolutions.jts.geom.{ Coordinate, Envelope, GeometryFactory, Point }   \n\nval dbfilter\u003ddbparam.filter(f \u003d\u003e f.size \u003e 35) // NOTE: 35 takes time but if reduced it may raise a GeoSpark paritioning issue\ncase class Coordinate2(longitude: Double, latitude: Double)\ncase class Cluster2(cluster_id: String, cluster_id_kmeans:String,poi_in_cluster:  Array[Coordinate2])\ncase class Clusters1(numOfClusters: Int, clusterSizes:Array[Int], clusters: Array[Cluster2])\n    \nval broadcastRDD \u003d spark.sparkContext.broadcast(dbfilter)\n\nval convertRDD\u003dbroadcastRDD.value.map{case u \u003d\u003e spark.sparkContext.parallelize(u)}\n\nval dbscan \u003d triples.cluster(ClusteringAlgorithm.DBSCAN).asInstanceOf[DBSCAN]\n\nval k \u003d convertRDD.map(f \u003d\u003e dbscan.dbclusters(f, 0.01, 2, spark))\n    \nval clusterIDPOIidPair \u003d k.map(arr \u003d\u003e arr.map(f \u003d\u003e (f._1, f._2.map(g \u003d\u003e (g._1,g._2.lat,g._2.lon)))).groupByKey())\nval temp\u003d clusterIDPOIidPair.reduce( _ ++ _ ).repartition(5)\n\n \nval col\u003dtemp.collect().toArray\nval exp\u003dcol.map(f\u003d\u003e(f._1,f._2.map(f \u003d\u003e (f.length)).toArray)).toArray\n     \ndef subsequenceT(a:String):String \u003d {\na.substring(0,  a.indexOf(\".\"))\n\n}\n\ndef findTerm(gt: (String, Iterable[Array[(String, Double, Double)]])): Cluster2 \u003d {\n    val a\u003dgt._1\n    val c\u003dgt._2.map(f \u003d\u003e f.head).map(f \u003d\u003e f._1).head\n    val func\u003dsubsequenceT(c)\n    val b\u003dgt._2.flatMap(f \u003d\u003e f.map(f \u003d\u003e (Coordinate2(f._3,f._2))))\n    (Cluster2(a,func,b.toArray))\n}\n\nval newdata\u003dcol.map(f \u003d\u003e f._2.map(f \u003d\u003e f.length).toArray).flatMap(f \u003d\u003e f).toArray\nval poisDB\u003dClusters1(exp.size, newdata,col.map(g \u003d\u003e findTerm(g)))",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.641",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925641_1297240031",
+      "id": "20201003-170131_1915505568",
+      "dateCreated": "2020-10-15 14:42:05.641",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nprintln(poisDB)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.641",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925641_-765816018",
+      "id": "20201003-173213_1115844896",
+      "dateCreated": "2020-10-15 14:42:05.641",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nz.angularBind(\"someScopeVar\", poisDB)",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.641",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925641_2012012561",
+      "id": "20201003-170205_1778680175",
+      "dateCreated": "2020-10-15 14:42:05.641",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n  \u003chead\u003e\n      \u003ctitle\u003eSLIPO\u003c/title\u003e\n      \u003c!-- Convex hull library --\u003e\n    \u003clink rel\u003d\"stylesheet\" href\u003d\"//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css\" /\u003e \n    \u003clink rel\u003d\"stylesheet\" href\u003d\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.css\" integrity\u003d\"sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ\u003d\u003d\" crossorigin\u003d\"\"/\u003e\n    \u003cscript src\u003d\"https://unpkg.com/leaflet@1.3.1/dist/leaflet.js\" integrity\u003d\"sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw\u003d\u003d\" crossorigin\u003d\"\"\u003e\u003c/script\u003e\n\n      \u003clink rel\u003d\"stylesheet\" href\u003d\"https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css\"\u003e  \n        \n    \n     \u003c!--  \u003cscript src\u003d\"https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.js\"\u003e\u003c/script\u003e --\u003e\n   \u003cscript\u003e\n      \n      /*\n       Leaflet.AwesomeMarkers, a plugin that adds colorful iconic markers for Leaflet, based on the Font Awesome icons\n       (c) 2012-2013, Lennard Voogdt\n\n      http://leafletjs.com\n      https://github.com/lvoogdt\n     */\n\n     /*global L*/\n\n(function (window, document, undefined) {\n    \"use strict\";\n    /*\n     * Leaflet.AwesomeMarkers assumes that you have already included the Leaflet library.\n     */\n\n    L.AwesomeMarkers \u003d {};\n\n    L.AwesomeMarkers.version \u003d \u00272.0.1\u0027;\n\n    L.AwesomeMarkers.Icon \u003d L.Icon.extend({\n        options: {\n            iconSize: [35, 45],\n            iconAnchor:   [17, 42],\n            popupAnchor: [1, -32],\n            shadowAnchor: [10, 12],\n            shadowSize: [36, 16],\n            className: \u0027awesome-marker\u0027,\n            prefix: \u0027glyphicon\u0027,\n            spinClass: \u0027fa-spin\u0027,\n            extraClasses: \u0027\u0027,\n            icon: \u0027home\u0027,\n            markerColor: \u0027blue\u0027,\n            iconColor: \u0027white\u0027\n        },\n\n        initialize: function (options) {\n            options \u003d L.Util.setOptions(this, options);\n        },\n\n        createIcon: function () {\n            var div \u003d document.createElement(\u0027div\u0027),\n                options \u003d this.options;\n\n            if (options.icon) {\n                div.innerHTML \u003d this._createInner();\n            }\n\n            if (options.bgPos) {\n                div.style.backgroundPosition \u003d\n                    (-options.bgPos.x) + \u0027px \u0027 + (-options.bgPos.y) + \u0027px\u0027;\n            }\n\n            this._setIconStyles(div, \u0027icon-\u0027 + options.markerColor);\n            return div;\n        },\n\n        _createInner: function() {\n            var iconClass, iconSpinClass \u003d \"\", iconColorClass \u003d \"\", iconColorStyle \u003d \"\", options \u003d this.options;\n\n            if(options.icon.slice(0,options.prefix.length+1) \u003d\u003d\u003d options.prefix + \"-\") {\n                iconClass \u003d options.icon;\n            } else {\n                iconClass \u003d options.prefix + \"-\" + options.icon;\n            }\n\n            if(options.spin \u0026\u0026 typeof options.spinClass \u003d\u003d\u003d \"string\") {\n                iconSpinClass \u003d options.spinClass;\n            }\n\n            if(options.iconColor) {\n                if(options.iconColor \u003d\u003d\u003d \u0027white\u0027 || options.iconColor \u003d\u003d\u003d \u0027black\u0027) {\n                    iconColorClass \u003d \"icon-\" + options.iconColor;\n                } else {\n                    iconColorStyle \u003d \"style\u003d\u0027color: \" + options.iconColor + \"\u0027 \";\n                }\n            }\n\n            return \"\u003ci \" + iconColorStyle + \"class\u003d\u0027\" + options.extraClasses + \" \" + options.prefix + \" \" + iconClass + \" \" + iconSpinClass + \" \" + iconColorClass + \"\u0027\u003e\u003c/i\u003e\";\n        },\n\n        _setIconStyles: function (img, name) {\n            var options \u003d this.options,\n                size \u003d L.point(options[name \u003d\u003d\u003d \u0027shadow\u0027 ? \u0027shadowSize\u0027 : \u0027iconSize\u0027]),\n                anchor;\n\n            if (name \u003d\u003d\u003d \u0027shadow\u0027) {\n                anchor \u003d L.point(options.shadowAnchor || options.iconAnchor);\n            } else {\n                anchor \u003d L.point(options.iconAnchor);\n            }\n\n            if (!anchor \u0026\u0026 size) {\n                anchor \u003d size.divideBy(2, true);\n            }\n\n            img.className \u003d \u0027awesome-marker-\u0027 + name + \u0027 \u0027 + options.className;\n\n            if (anchor) {\n                img.style.marginLeft \u003d (-anchor.x) + \u0027px\u0027;\n                img.style.marginTop  \u003d (-anchor.y) + \u0027px\u0027;\n            }\n\n            if (size) {\n                img.style.width  \u003d size.x + \u0027px\u0027;\n                img.style.height \u003d size.y + \u0027px\u0027;\n            }\n        },\n\n        createShadow: function () {\n            var div \u003d document.createElement(\u0027div\u0027);\n\n            this._setIconStyles(div, \u0027shadow\u0027);\n            return div;\n      }\n    });\n        \n    L.AwesomeMarkers.icon \u003d function (options) {\n        return new L.AwesomeMarkers.Icon(options);\n    };\n\n}(this, document));\n\n\n\u003c/script\u003e \n\n     \u003cscript src\u003d\"http://cdn.jsdelivr.net/gh/Rajjat/FrontEND/resources/hull.js\"\u003e\u003c/script\u003e\n  \n          \n  \u003c/head\u003e\n  \u003cbody\u003e\n     \u003cdiv id\u003d\"someId1\"\u003e\u003c/div\u003e\n     \u003cdiv id\u003d\"someId\"\u003e\u003c/div\u003e\n     \u003cdiv id\u003d\"demo\"\u003e\n     \u003ccenter\u003e\n\t \u003cdiv id\u003d\"mapid\" style\u003d\"width: 130%; height: 800px;\"\u003e\u003c/div\u003e\n     \u003c/center\u003e\n     \n     \u003cscript\u003e\n      \n      //var mymap \u003d L.map(\u0027mapid\u0027).setView([51.3,6.6], 11);\n      var mymap \u003d L.map(\u0027mapid\u0027).setView([52.961451, 8.320366], 11);\n\t\n      L.tileLayer(\u0027https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token\u003dpk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw\u0027, {\n      maxZoom: 18,\n      attribution: \u0027Map data \u0026copy; \u003ca href\u003d\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e contributors, \u0027 +\n      \u0027\u003ca href\u003d\"http://creativecommons.org/licenses/by-sa/2.0/\"\u003eCC-BY-SA\u003c/a\u003e, \u0027 +\n      \u0027Imagery © \u003ca href\u003d\"http://mapbox.com\"\u003eMapbox\u003c/a\u003e\u0027,\n      id: \u0027mapbox.streets\u0027\n      }).addTo(mymap);\n\n      \n      var colorMarker \u003d [];\n      colorMarker[0] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027red\u0027});\n      colorMarker[1] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027green\u0027});\n      colorMarker[2] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027darkred\u0027});\n      colorMarker[3] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027orange\u0027});\n      colorMarker[4] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027darkgreen\u0027});\n      colorMarker[5] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027blue\u0027});\n      colorMarker[6] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027purple\u0027});\n      colorMarker[7] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027darkpurple\u0027});\n      colorMarker[8] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027cadetblue\u0027});\n      colorMarker[9] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027darkblue\u0027});\n      // colorMarker[10] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027cadetblue\u0027});\n      // colorMarker[11] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027cadetblue\u0027});\n      // colorMarker[12] \u003d L.AwesomeMarkers.icon({icon: \u0027\u0027,markerColor: \u0027cadetblue\u0027});\n\n      var colorHull \u003d [];\n      colorHull[0] \u003d \u0027#e84c38\u0027 ;\n      colorHull[1] \u003d \u0027#93c827\u0027 ;\n      colorHull[2] \u003d \u0027#b54347\u0027 ;\n      colorHull[3] \u003d \u0027#f89b31\u0027 ;\n      colorHull[4] \u003d \u0027#919625\u0027 ;\n      colorHull[5] \u003d \u0027#3db2e5\u0027 ;\n      colorHull[6] \u003d \u0027#d759bb\u0027 ;\n      colorHull[7] \u003d \u0027#5e3c6f\u0027 ;\n      colorHull[8] \u003d \u0027#4e7080\u0027 ;\n      colorHull[9] \u003d \u0027#0066a4\u0027 ;\n      \n\n    \n      \n      \n      var element1 \u003d $(\u0027#someId1\u0027);\n      var angularVar1 \u003d \u0027clustersPois\u0027;\n      var scope1 \u003d angular.element(element1.parent(\u0027.ng-scope\u0027)).scope().compiledScope;\n      window.watcher \u003d scope1.$watch(angularVar1, function(newVal1, oldVal1){\n      var jsonE1 \u003d JSON.stringify(newVal1);\n      var data1 \u003d JSON.parse(jsonE1);\n      console.log(\"lat\u003d\"+data1.clusters[1].poi_in_cluster[0].coordinate.latitude);\n      console.log(\"long\u003d\"+data1.clusters[1].poi_in_cluster[0].coordinate.longitude);\n      for (i\u003d0;i\u003c10;i++){\n\t   for (j\u003d0;j\u003cdata1.clusterSizes[i];j++){\n\t        L.marker([data1.clusters[i].poi_in_cluster[j].coordinate.latitude,data1.clusters[i].poi_in_cluster[j].coordinate.longitude], {icon: colorMarker[data1.clusters[i].cluster_id]}).addTo(mymap).bindPopup(data1.clusters[i].poi_in_cluster[j].categories.toString());\n        }\n      }\n     });\n     \n     \n     var element \u003d $(\u0027#someId\u0027);\n     var angularVar \u003d \u0027someScopeVar\u0027;\n     var scope \u003d angular.element(element.parent(\u0027.ng-scope\u0027)).scope().compiledScope;\n     window.watcher \u003d scope.$watch(angularVar, function(newVal, oldVal){\n     var jsonE \u003d JSON.stringify(newVal);\n     var data \u003d JSON.parse(jsonE);\n     \n      for (i\u003d0;i\u003cdata.numOfClusters;i++){\n        var poly \u003d [];\n\t  for (j\u003d0;j\u003cdata.clusterSizes[i];j++){\n\t\t\t\tpoly[j]\u003d[];\n\t\t\t\tpoly[j] \u003d [ data.clusters[i].poi_in_cluster[j].latitude , data.clusters[i].poi_in_cluster[j].longitude ] ; // reversed\n\t\t\t\t}\n\t\t    L.polygon(hull(poly,10)).setStyle({fillColor: colorHull[data.clusters[i].cluster_id_kmeans] , color: colorHull[data.clusters[i].cluster_id_kmeans]}).addTo(mymap) ;\n     }\n});\n     \n     \n  \n     \n    \u003c/script\u003e\n  \u003c/body\u003e\n\n\u003c/html\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.641",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/undefined",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925641_-379075491",
+      "id": "20201003-170254_2109386096",
+      "dateCreated": "2020-10-15 14:42:05.641",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-10-15 14:42:05.642",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1602772925642_1695239771",
+      "id": "20201003-170343_1411404257",
+      "dateCreated": "2020-10-15 14:42:05.642",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "hacka",
+  "id": "2FPKFTKZT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "python:shared_process": [],
+    "angular:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
