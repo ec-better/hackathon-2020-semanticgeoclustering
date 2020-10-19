@@ -37,7 +37,6 @@ The exercise will feature the deployment of <ins>a pre-setup Docker image on Lin
   ```
   make up
   ```
-  Start the cluster (this will lead to downloading BDE docker images, which will take a while)
 
   To load the data to your cluster simply do:
   ```
