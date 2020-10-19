@@ -20,8 +20,8 @@ The exercise will feature the deployment of <ins>a pre-setup Docker image on Lin
 2. The  Hackathon requires installation of Python, SANSA, Hadoop, Apache Spark and Apache Zeppelin. But do not worry! We have installed them all in a docker image, ready to download and use on the go.
 
 3. To use the docker image you will need:
-  Docker Engine  >= 1.13.0     Installation Tutorial: https://docs.docker.com/engine/install/
-  Docker Compose >= 1.10.0   Installation Tutorial: https://docs.docker.com/compose/install/
+  * Docker Engine  >= 1.13.0     Installation Tutorial: https://docs.docker.com/engine/install/
+  * Docker Compose >= 1.10.0   Installation Tutorial: https://docs.docker.com/compose/install/
 
 4. After Installation, configure Docker:
   ```
