@@ -6,8 +6,7 @@
 The exercise will feature the deployment of <ins>a pre-setup Docker image on Linux OS</ins>. 
 
 
-
-# Requirements
+## Requirements
 * Docker Engine >= 1.13.0
 * docker-compose >= 1.10.0
 * Around 10 GB of disk space for Docker images
@@ -45,7 +44,7 @@ To load the data to your cluster simply do:
 make load-data
 ```
 
-# Starting page on the day of hackathon
+## Starting page on the day of hackathon
 When start-up is done you will be able to access the following interfaces:
 * http://localhost:8080/ (Spark Master)
 * http://localhost:8088/home (Hue HDFS Filebrowser)
@@ -56,7 +55,7 @@ Go on and open [Zeppelin](http://localhost), make a new notebook and wait for th
 
 
 
-# Notes
+## Notes
 
 To restart Zeppelin without restarting the whole stack:
 ```
