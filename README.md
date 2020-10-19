@@ -74,7 +74,7 @@ make up
 make load-data
 ```
 
-# Repository Read me info.
+# Repository info.
 * The instructions from this repo were tested on Ubuntu 18.04 and Macos 10.15.5 with Docker engine 17.03. and Docker engine 19.03.13
 
 * This repository you hold a [docker-compose.yml](./docker-compose.yml) for running Hadoop/Spark cluster locally.
