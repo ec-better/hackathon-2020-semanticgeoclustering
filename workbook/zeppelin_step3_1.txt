@@ -1,0 +1,2 @@
+%sh
+hadoop fs -put ../sansa-examples/data/EOPEN_POIs_100.nt  /data/

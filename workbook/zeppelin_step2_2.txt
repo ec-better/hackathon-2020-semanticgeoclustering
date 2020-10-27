@@ -1,0 +1,2 @@
+%sh
+head ../sansa-examples/data/EOPEN_POIs_100.nt  -n 100

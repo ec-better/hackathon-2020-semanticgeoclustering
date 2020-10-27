@@ -1,0 +1,2 @@
+%spark
+z.angularBind("someScopeVar", poisDB)

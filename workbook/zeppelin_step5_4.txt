@@ -1,0 +1,44 @@
+%spark
+import net.sansa_stack.ml.spark.clustering.algorithms.DBSCAN
+import net.sansa_stack.ml.spark.clustering._
+import scala.util.parsing.json._
+import org.json4s.jackson.Serialization.write
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import com.vividsolutions.jts.geom.{ Coordinate, Envelope, GeometryFactory, Point }   
+
+val dbfilter=dbparam.filter(f => f.size > 35) // NOTE: 35 takes time but if reduced it may raise a GeoSpark paritioning issue
+case class Coordinate2(longitude: Double, latitude: Double)
+case class Cluster2(cluster_id: String, cluster_id_kmeans:String,poi_in_cluster:  Array[Coordinate2])
+case class Clusters1(numOfClusters: Int, clusterSizes:Array[Int], clusters: Array[Cluster2])
+    
+val broadcastRDD = spark.sparkContext.broadcast(dbfilter)
+
+val convertRDD=broadcastRDD.value.map{case u => spark.sparkContext.parallelize(u)}
+
+val dbscan = triples.cluster(ClusteringAlgorithm.DBSCAN).asInstanceOf[DBSCAN]
+
+val k = convertRDD.map(f => dbscan.dbclusters(f, 0.01, 2, spark))
+    
+val clusterIDPOIidPair = k.map(arr => arr.map(f => (f._1, f._2.map(g => (g._1,g._2.lat,g._2.lon)))).groupByKey())
+val temp= clusterIDPOIidPair.reduce( _ ++ _ ).repartition(5)
+
+ 
+val col=temp.collect().toArray
+val exp=col.map(f=>(f._1,f._2.map(f => (f.length)).toArray)).toArray
+     
+def subsequenceT(a:String):String = {
+a.substring(0,  a.indexOf("."))
+
+}
+
+def findTerm(gt: (String, Iterable[Array[(String, Double, Double)]])): Cluster2 = {
+    val a=gt._1
+    val c=gt._2.map(f => f.head).map(f => f._1).head
+    val func=subsequenceT(c)
+    val b=gt._2.flatMap(f => f.map(f => (Coordinate2(f._3,f._2))))
+    (Cluster2(a,func,b.toArray))
+}
+
+val newdata=col.map(f => f._2.map(f => f.length).toArray).flatMap(f => f).toArray
+val poisDB=Clusters1(exp.size, newdata,col.map(g => findTerm(g)))

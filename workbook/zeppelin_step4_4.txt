@@ -1,0 +1,13 @@
+%spark
+case class ClusterOSM(cluster_id: Int, poi_in_cluster: Array[PoiOSM])
+case class ClsutersOSM(numOfClusters: Int,clusterSizes: Array[Int],clusters:Array[ClusterOSM])
+val poiCategorySet = pois.map(poi => (poi.categories,(poi.coordinate,poi.poi_id))).persist()
+val a=poiCategorySet.groupByKey()
+val b=a.zipWithIndex()
+val forJSON=b.map(f => (f._2,(f._1._1,f._1._2.toArray)))
+val t=forJSON.map(f => ClusterOSM(f._1.toInt,f._2._2.map(g => PoiOSM(g._2,g._1,f._2._1)))).collect()
+val assignments = forJSON.collect().toList.map(f => f._2._2.length).toArray
+val assm=assignments.toArray
+val lenthCluster=assm.length
+val finaloutputforsaving= ClsutersOSM(lenthCluster,assm,t)
+poiCategorySet.take(10).foreach(println)

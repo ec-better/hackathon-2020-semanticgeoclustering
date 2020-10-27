@@ -1,0 +1,3 @@
+%spark
+val c=b.map(f=>((f._2,f._1._1,f._1._2)))
+val d=b.map(f=>f._1._2.map(g=>(f._2,f._1._1,g._1,g._2)).toList)
