@@ -8,5 +8,5 @@ import net.sansa_stack.rdf.spark.io._
 val input = "/data/EOPEN_POIs_100.nt"
 val lang = Lang.NTRIPLES
 
-
+val triples = spark.rdf(lang)(input)
 triples.take(30).foreach(println)
