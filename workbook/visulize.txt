@@ -1,0 +1,239 @@
+%angular
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>SLIPO</title>
+      <!-- Convex hull library -->
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" /> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css">  
+        
+    
+     <!--  <script src="https://fastcdn.org/Leaflet.awesome-markers/2.0.1/leaflet.awesome-markers.js"></script> -->
+   <script>
+      
+      /*
+       Leaflet.AwesomeMarkers, a plugin that adds colorful iconic markers for Leaflet, based on the Font Awesome icons
+       (c) 2012-2013, Lennard Voogdt
+
+      http://leafletjs.com
+      https://github.com/lvoogdt
+     */
+
+     /*global L*/
+
+(function (window, document, undefined) {
+    "use strict";
+    /*
+     * Leaflet.AwesomeMarkers assumes that you have already included the Leaflet library.
+     */
+
+    L.AwesomeMarkers = {};
+
+    L.AwesomeMarkers.version = '2.0.1';
+
+    L.AwesomeMarkers.Icon = L.Icon.extend({
+        options: {
+            iconSize: [35, 45],
+            iconAnchor:   [17, 42],
+            popupAnchor: [1, -32],
+            shadowAnchor: [10, 12],
+            shadowSize: [36, 16],
+            className: 'awesome-marker',
+            prefix: 'glyphicon',
+            spinClass: 'fa-spin',
+            extraClasses: '',
+            icon: 'home',
+            markerColor: 'blue',
+            iconColor: 'white'
+        },
+
+        initialize: function (options) {
+            options = L.Util.setOptions(this, options);
+        },
+
+        createIcon: function () {
+            var div = document.createElement('div'),
+                options = this.options;
+
+            if (options.icon) {
+                div.innerHTML = this._createInner();
+            }
+
+            if (options.bgPos) {
+                div.style.backgroundPosition =
+                    (-options.bgPos.x) + 'px ' + (-options.bgPos.y) + 'px';
+            }
+
+            this._setIconStyles(div, 'icon-' + options.markerColor);
+            return div;
+        },
+
+        _createInner: function() {
+            var iconClass, iconSpinClass = "", iconColorClass = "", iconColorStyle = "", options = this.options;
+
+            if(options.icon.slice(0,options.prefix.length+1) === options.prefix + "-") {
+                iconClass = options.icon;
+            } else {
+                iconClass = options.prefix + "-" + options.icon;
+            }
+
+            if(options.spin && typeof options.spinClass === "string") {
+                iconSpinClass = options.spinClass;
+            }
+
+            if(options.iconColor) {
+                if(options.iconColor === 'white' || options.iconColor === 'black') {
+                    iconColorClass = "icon-" + options.iconColor;
+                } else {
+                    iconColorStyle = "style='color: " + options.iconColor + "' ";
+                }
+            }
+
+            return "<i " + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + iconClass + " " + iconSpinClass + " " + iconColorClass + "'></i>";
+        },
+
+        _setIconStyles: function (img, name) {
+            var options = this.options,
+                size = L.point(options[name === 'shadow' ? 'shadowSize' : 'iconSize']),
+                anchor;
+
+            if (name === 'shadow') {
+                anchor = L.point(options.shadowAnchor || options.iconAnchor);
+            } else {
+                anchor = L.point(options.iconAnchor);
+            }
+
+            if (!anchor && size) {
+                anchor = size.divideBy(2, true);
+            }
+
+            img.className = 'awesome-marker-' + name + ' ' + options.className;
+
+            if (anchor) {
+                img.style.marginLeft = (-anchor.x) + 'px';
+                img.style.marginTop  = (-anchor.y) + 'px';
+            }
+
+            if (size) {
+                img.style.width  = size.x + 'px';
+                img.style.height = size.y + 'px';
+            }
+        },
+
+        createShadow: function () {
+            var div = document.createElement('div');
+
+            this._setIconStyles(div, 'shadow');
+            return div;
+      }
+    });
+        
+    L.AwesomeMarkers.icon = function (options) {
+        return new L.AwesomeMarkers.Icon(options);
+    };
+
+}(this, document));
+
+
+</script> 
+
+     <script src="http://cdn.jsdelivr.net/gh/Rajjat/FrontEND/resources/hull.js"></script>
+  
+          
+  </head>
+  <body>
+     <div id="someId1"></div>
+     <div id="someId"></div>
+     <div id="demo">
+     <center>
+	 <div id="mapid" style="width: 130%; height: 800px;"></div>
+     </center>
+     
+     <script>
+      
+      //var mymap = L.map('mapid').setView([51.3,6.6], 11);
+      var mymap = L.map('mapid').setView([52.961451, 8.320366], 11);
+	
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'mapbox.streets'
+      }).addTo(mymap);
+
+      
+      var colorMarker = [];
+      colorMarker[0] = L.AwesomeMarkers.icon({icon: '',markerColor: 'red'});
+      colorMarker[1] = L.AwesomeMarkers.icon({icon: '',markerColor: 'green'});
+      colorMarker[2] = L.AwesomeMarkers.icon({icon: '',markerColor: 'darkred'});
+      colorMarker[3] = L.AwesomeMarkers.icon({icon: '',markerColor: 'orange'});
+      colorMarker[4] = L.AwesomeMarkers.icon({icon: '',markerColor: 'darkgreen'});
+      colorMarker[5] = L.AwesomeMarkers.icon({icon: '',markerColor: 'blue'});
+      colorMarker[6] = L.AwesomeMarkers.icon({icon: '',markerColor: 'purple'});
+      colorMarker[7] = L.AwesomeMarkers.icon({icon: '',markerColor: 'darkpurple'});
+      colorMarker[8] = L.AwesomeMarkers.icon({icon: '',markerColor: 'cadetblue'});
+      colorMarker[9] = L.AwesomeMarkers.icon({icon: '',markerColor: 'darkblue'});
+      // colorMarker[10] = L.AwesomeMarkers.icon({icon: '',markerColor: 'cadetblue'});
+      // colorMarker[11] = L.AwesomeMarkers.icon({icon: '',markerColor: 'cadetblue'});
+      // colorMarker[12] = L.AwesomeMarkers.icon({icon: '',markerColor: 'cadetblue'});
+
+      var colorHull = [];
+      colorHull[0] = '#e84c38' ;
+      colorHull[1] = '#93c827' ;
+      colorHull[2] = '#b54347' ;
+      colorHull[3] = '#f89b31' ;
+      colorHull[4] = '#919625' ;
+      colorHull[5] = '#3db2e5' ;
+      colorHull[6] = '#d759bb' ;
+      colorHull[7] = '#5e3c6f' ;
+      colorHull[8] = '#4e7080' ;
+      colorHull[9] = '#0066a4' ;
+      
+
+    
+      
+      
+      var element1 = $('#someId1');
+      var angularVar1 = 'clustersPois';
+      var scope1 = angular.element(element1.parent('.ng-scope')).scope().compiledScope;
+      window.watcher = scope1.$watch(angularVar1, function(newVal1, oldVal1){
+      var jsonE1 = JSON.stringify(newVal1);
+      var data1 = JSON.parse(jsonE1);
+      console.log("lat="+data1.clusters[1].poi_in_cluster[0].coordinate.latitude);
+      console.log("long="+data1.clusters[1].poi_in_cluster[0].coordinate.longitude);
+      for (i=0;i<10;i++){
+	   for (j=0;j<data1.clusterSizes[i];j++){
+	        L.marker([data1.clusters[i].poi_in_cluster[j].coordinate.latitude,data1.clusters[i].poi_in_cluster[j].coordinate.longitude], {icon: colorMarker[data1.clusters[i].cluster_id]}).addTo(mymap).bindPopup(data1.clusters[i].poi_in_cluster[j].categories.toString());
+        }
+      }
+     });
+     
+     
+     var element = $('#someId');
+     var angularVar = 'someScopeVar';
+     var scope = angular.element(element.parent('.ng-scope')).scope().compiledScope;
+     window.watcher = scope.$watch(angularVar, function(newVal, oldVal){
+     var jsonE = JSON.stringify(newVal);
+     var data = JSON.parse(jsonE);
+     
+      for (i=0;i<data.numOfClusters;i++){
+        var poly = [];
+	  for (j=0;j<data.clusterSizes[i];j++){
+				poly[j]=[];
+				poly[j] = [ data.clusters[i].poi_in_cluster[j].latitude , data.clusters[i].poi_in_cluster[j].longitude ] ; // reversed
+				}
+		    L.polygon(hull(poly,10)).setStyle({fillColor: colorHull[data.clusters[i].cluster_id_kmeans] , color: colorHull[data.clusters[i].cluster_id_kmeans]}).addTo(mymap) ;
+     }
+});
+     
+     
+  
+     
+    </script>
+  </body>
+
+</html>
